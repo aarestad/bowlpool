@@ -17,8 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    #     url(r'^$', TemplateView.as_view(template_name='static_pages/index.html'), name='home'),
-] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-  # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        url(
+            r"^$",
+            TemplateView.as_view(template_name="static_pages/index.html"),
+            name="home",
+        ),
+    ]
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)
