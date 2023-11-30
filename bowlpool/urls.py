@@ -7,6 +7,8 @@ from django.views.generic.base import TemplateView
 urlpatterns = (
     [
         path("admin/", admin.site.urls),
+        path("bowl-pool/", include("bowlpool_app.urls")),
+        path("accounts/", include("django.contrib.auth.urls")),
         re_path(
             r"^$",
             TemplateView.as_view(template_name="static_pages/index.html"),

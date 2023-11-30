@@ -1,13 +1,7 @@
-from django.contrib import admin
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    re_path(
-        r"^$",
-        TemplateView.as_view(template_name="static_pages/index.html"),
-        name="home",
-    ),
     path(
         "<int:bowl_year>/all-picks",
         views.view_all_picks_for_year,

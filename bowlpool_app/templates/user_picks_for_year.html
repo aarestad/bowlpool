@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>The {{ bowl_year }} A-A Bowl Pool</h1>
+
+  <h2>Your Picks</h2>
+
+  {% load tz %}
+
+  <form action="{% url 'submit_my_picks_for_year' bowl_year %}" method="post">
+    {% csrf_token %}
+
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <td>Bowl Name</td>
+        <td>Start Date/Time (Central)</td>
+        <td>Away Team</td>
+        <td>Home Team</td>
+        <td>Favorite</td>
+        <td>Your Pick</td>
+      </tr>
+      </thead>
+
+      <tbody>
+      {% timezone "America/Chicago" %}
+        {% for bowl_matchup_pick in picks_for_year %}
+          <tr>
+            <td>{{ bowl_matchup_pick.bowl_matchup.bowl_game.name }}</td>
+            <td>{{ bowl_matchup_pick.bowl_matchup.start_time }}</td>
+            <td>{{ bowl_matchup_pick.bowl_matchup.away_team.name }}</td>
+            <td>{{ bowl_matchup_pick.bowl_matchup.home_team.name }}</td>
+            <td>{{ bowl_matchup_pick.bowl_matchup.bowl_favorite }}</td>
+            <td>
+              <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
+                <option value=""></option>
+                <option value="{{ bowl_matchup_pick.bowl_matchup.away_team.id }}"
+                  {% if bowl_matchup_pick.winner.id == bowl_matchup_pick.bowl_matchup.away_team.id %}
+                  selected="selected"
+                  {% endif %}
+                >
+                  {{ bowl_matchup_pick.bowl_matchup.away_team.name }}
+                </option>
+                <option value="{{ bowl_matchup_pick.bowl_matchup.home_team.id }}"
+                  {% if bowl_matchup_pick.winner.id == bowl_matchup_pick.bowl_matchup.home_team.id %}
+                  selected="selected"
+                  {% endif %}
+                >
+                  {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
+                </option>
+              </select>
+              by
+              <input type="number" name="{{ bowl_matchup_pick.bowl_matchup.id }}-margin"
+              value="{{ bowl_matchup_pick.margin }}">
+            </td>
+          </tr>
+        {% endfor %}
+      {% endtimezone %}
+      </tbody>
+    </table>
+
+    <input type="submit" value="Submit Picks">
+  </form>
+{% endblock %}

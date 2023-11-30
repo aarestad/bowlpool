@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>The {{ bowl_year }} A-A Bowl Pool</h1>
+
+<h2>Everyone's Picks</h2>
+
+{% load tz %}
+
+{% for bowl_matchup, picks in picks_for_year.items %}
+<h3>{{ bowl_matchup.display_name }}</h3>
+
+<ul>
+    {% for pick in picks %}
+    <li>{{ pick.user.get_full_name }}: {{ pick.winner_and_margin }}</li>
+    {% endfor %}
+</ul>
+{% endfor %}
+
+{% endblock %}
