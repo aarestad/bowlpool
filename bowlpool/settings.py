@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bowlpool_app.apps.BowlpoolAppConfig",
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    "django.contrib.redirects",
 ]
 
 MIDDLEWARE = [
@@ -34,6 +36,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = [

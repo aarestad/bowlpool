@@ -11,8 +11,8 @@ urlpatterns = (
         path("bowl-pool/", include("bowlpool_app.urls")),
         path("accounts/", include("allauth.urls")),
         path("logout", LogoutView.as_view()),
-        re_path(
-            r"^$",
+        path(
+            "",
             TemplateView.as_view(template_name="static_pages/index.html"),
             name="home",
         ),
