@@ -3,7 +3,12 @@ from . import views
 
 urlpatterns = [
     path(
-        "<int:bowl_year>/all-picks",
+        "",
+        views.year_index,
+        name="year_index",
+    ),
+    path(
+        "<int:bowl_year>/",
         views.view_all_picks_for_year,
         name="view_all_picks_for_year",
     ),

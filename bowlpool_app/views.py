@@ -8,6 +8,20 @@ from django.urls import reverse
 from .models import BowlMatchupPick, BowlMatchup, Team
 
 
+def year_index(request):
+    years = (
+        BowlMatchup.objects.order_by("bowl_year").values_list("bowl_year").distinct()
+    )[0]
+
+    return render(
+        request,
+        "year_index.html",
+        {
+            "years": years,
+        },
+    )
+
+
 @login_required
 def view_my_picks_for_year(request, bowl_year):
     picks_for_year = BowlMatchupPick.objects.filter(
@@ -86,6 +100,8 @@ def submit_my_picks_for_year(request, bowl_year):
             db_pick = BowlMatchupPick.objects.get(
                 user=request.user, bowl_matchup=bowl_matchup
             )
+
+            # TODO: if db_pick.bowl_matchup.start_time <= now, return an error
 
             db_pick.winner = winner
             db_pick.margin = margin

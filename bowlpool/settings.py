@@ -13,7 +13,7 @@ SECRET_KEY = "django-insecure-&a($#pax78x)jl2vg60r&0g--s2p*2lvpg9!qy3s14f%lsvk)%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["bowlpool.peter-aarestad.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["bowlpool.peter-aarestad.com", "127.0.0.1", "localhost"]
 
 
 # Application definition
