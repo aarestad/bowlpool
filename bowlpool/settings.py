@@ -20,10 +20,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "bowlpool_app.apps.BowlpoolAppConfig",
     "django_bootstrap5",
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
 ]
 
 MIDDLEWARE = [
@@ -34,12 +30,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 ROOT_URLCONF = "bowlpool.urls"
@@ -120,4 +114,3 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_ID = 2
 LOGIN_REDIRECT_URL = "/bowl-pool/"
 LOGOUT_REDIRECT_URL = "/bowl-pool/"
-ACCOUNT_LOGOUT_ON_GET = True
