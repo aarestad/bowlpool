@@ -22,4 +22,5 @@ urlpatterns = [
         views.submit_my_picks_for_year,
         name="submit_my_picks_for_year",
     ),
+    path("accounts/register", views.register_user, name="register"),
 ]

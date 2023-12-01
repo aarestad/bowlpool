@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from .models import BowlMatchupPick, BowlMatchup, Team
+from .forms import BowlPoolUserCreationForm
 
 
 def year_index(request):
@@ -20,6 +21,12 @@ def year_index(request):
             "years": years,
         },
     )
+
+
+def register_user(request):
+    form = BowlPoolUserCreationForm()
+
+    return render(request, "register.html", {"form": form})
 
 
 @login_required
