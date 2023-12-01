@@ -7,6 +7,10 @@
 {% load socialaccount %}
 
 <div class="header">
+    {% if user.is_staff %}
+    <a href="{% url 'admin:index' %}">Admin</a><br/>
+    {% endif %}
+
     {% if user.is_authenticated %}
     <a href="{% url 'account_logout' %}">Logout</a>
     {% else %}

@@ -10,7 +10,6 @@ urlpatterns = (
         path("admin/", admin.site.urls),
         path("bowl-pool/", include("bowlpool_app.urls")),
         path("accounts/", include("allauth.urls")),
-        path("logout", LogoutView.as_view()),
         path("", RedirectView.as_view(url="bowl-pool/")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
