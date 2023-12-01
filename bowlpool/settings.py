@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    "django.contrib.redirects",
 ]
 
 MIDDLEWARE = [
@@ -36,7 +35,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -122,3 +120,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SITE_ID = 2
 LOGIN_REDIRECT_URL = "/bowl-pool/"
 LOGOUT_REDIRECT_URL = "/bowl-pool/"
+ACCOUNT_LOGOUT_ON_GET = True
