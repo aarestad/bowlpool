@@ -1,31 +1,23 @@
 {% extends 'base.html' %}
 
+{% load django_bootstrap5 %}
 {% load static %}
 
 {% block content %}
   <link href="{% static 'bowlpool_app/css/signin.css' %}" rel="stylesheet">
 
   <div class="form-signin text-center">
-    <form method="post" action="{% url 'login' %}">
+    <h1 class="h3 mb-3 fw-normal">A-A Bowl Pool Sign In</h1>
+
+    <form method="post" action="{% url 'login' %}" class="form">
       {% csrf_token %}
-
-      <h1 class="h3 mb-3 fw-normal">A-A Bowl Pool Sign In</h1>
-
-      <div class="form-floating">
-        <input type="email" name="username" class="form-control" id="floatingInput" placeholder="name@example.com">
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div class="form-floating">
-        <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-        <label for="floatingPassword">Password</label>
-        </tr>
-      </div>
+      {% bootstrap_form form alert_error_type="fields" %}
 
       <input type="hidden" name="next" value="{{ next }}">
 
-      <input class="w-100 btn btn-lg btn-primary" type="submit" value="Sign in">
+      {% bootstrap_button size="lg" extra_classes="w-100 btn-primary" button_type="submit" content="Sign in" %}
 
-      <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+      {% comment %} <p><a href="{% url 'password_reset' %}">Lost password?</a></p> {% endcomment %}
 
       <p><a href="{% url 'register' %}">Register</a></p>
     </form>
