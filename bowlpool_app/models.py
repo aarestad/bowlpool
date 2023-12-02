@@ -58,7 +58,6 @@ class Team(models.Model):
 
 class BowlGame(models.Model):
     name = models.CharField(max_length=128)
-    cfp_playoff_game = models.BooleanField()
 
     def __str__(self):
         return self.name
@@ -75,6 +74,7 @@ class BowlMatchup(models.Model):
             "Year of the matchup if before January 1, otherwise the year before"
         ),
     )
+    cfp_playoff_game = models.BooleanField(default=False)
     start_time = models.DateTimeField(help_text=_("Stored as UTC"))
     away_team = models.ForeignKey(
         Team, on_delete=models.CASCADE, related_name="away_team"
