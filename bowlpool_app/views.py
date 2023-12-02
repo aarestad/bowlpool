@@ -1,5 +1,6 @@
 from typing import Dict, List
 
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -15,6 +16,14 @@ def register_user(request):
 
         if form.is_valid():
             form.save()
+
+            new_user = authenticate(
+                username=form.cleaned_data["email"],
+                password=form.cleaned_data["password1"],
+            )
+
+            login(request, new_user)
+
             return HttpResponseRedirect(reverse("year_index"))
     else:
         form = BowlPoolUserCreationForm()
