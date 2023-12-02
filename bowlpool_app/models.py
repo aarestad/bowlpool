@@ -123,7 +123,12 @@ class BowlMatchup(models.Model):
 
     @property
     def display_name(self):
-        return f"{self.bowl_game.name}: {self.away_team} vs {self.home_team}"
+        dn = f"{self.bowl_game.name}: {self.away_team} vs {self.home_team}"
+
+        if self.cfp_playoff_game:
+            dn + " (CFP Semifinal)"
+
+        return dn
 
     def __str__(self):
         final_score = (
