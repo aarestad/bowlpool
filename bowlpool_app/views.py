@@ -19,7 +19,7 @@ def register_user(request):
     else:
         form = BowlPoolUserCreationForm()
 
-    return render(request, "register.html", {"form": form})
+    return render(request, "registration/register.html", {"form": form})
 
 
 def year_index(request):

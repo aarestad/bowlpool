@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
+  <link href="{% static 'bowlpool_app/css/signin.css' %}" rel="stylesheet">
+
   {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
@@ -14,7 +18,25 @@
     {% endif %}
   {% endif %}
 
-  <form method="post" action="{% url 'login' %}">
+  <main class="form-signin">
+    <form method="post" action="{% url 'login' %}">
+      <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+  
+      <div class="form-floating">
+        {{ form.username }}
+        {{ form.username.label_tag }}
+      </div>
+      <div class="form-floating">
+        {{ form.password }}
+        {{ form.password.label_tag }}
+      </div>
+  
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    </form>
+  </main>
+  
+
+  {% comment %} <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
 
     <table class="table">
@@ -30,7 +52,7 @@
 
     <input type="submit" value="login">
     <input type="hidden" name="next" value="{{ next }}">
-  </form>
+  </form> {% endcomment %}
 
   <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
   <p><a href="{% url 'register' %}">Register</a></p>
