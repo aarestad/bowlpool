@@ -1,5 +1,10 @@
 {% extends "base.html" %}
+
 {% block content %}
+    {% if form.errors %}
+        {{ form.errors }}
+    {% endif %}
+
   <form method="post" action="{% url 'register' %}">
     {% csrf_token %}
     <h2>Register</h2>
@@ -27,6 +32,6 @@
           </tr>
       </table>
 
-      <input type="submit" value="login">
+      <input type="submit" value="register">
     </form>
 {% endblock %}

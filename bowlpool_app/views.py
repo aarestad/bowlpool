@@ -9,6 +9,19 @@ from .models import BowlMatchupPick, BowlMatchup, Team
 from .forms import BowlPoolUserCreationForm
 
 
+def register_user(request):
+    if request.method == "POST":
+        form = BowlPoolUserCreationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("year_index"))
+    else:
+        form = BowlPoolUserCreationForm()
+
+    return render(request, "register.html", {"form": form})
+
+
 def year_index(request):
     years = (
         BowlMatchup.objects.order_by("bowl_year").values_list("bowl_year").distinct()
@@ -21,12 +34,6 @@ def year_index(request):
             "years": years,
         },
     )
-
-
-def register_user(request):
-    form = BowlPoolUserCreationForm()
-
-    return render(request, "register.html", {"form": form})
 
 
 @login_required
