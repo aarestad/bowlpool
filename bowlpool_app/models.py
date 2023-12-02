@@ -58,6 +58,7 @@ class Team(models.Model):
 
 class BowlGame(models.Model):
     name = models.CharField(max_length=128)
+    cfp_playoff_game = models.BooleanField()
 
     def __str__(self):
         return self.name
