@@ -126,7 +126,7 @@ class BowlMatchup(models.Model):
         dn = f"{self.bowl_game.name}: {self.away_team} vs {self.home_team}"
 
         if self.cfp_playoff_game:
-            dn + " (CFP Semifinal)"
+            dn += " (CFP Semifinal)"
 
         return dn
 
