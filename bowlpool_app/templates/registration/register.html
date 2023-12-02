@@ -1,37 +1,20 @@
 {% extends "base.html" %}
 
+{% load django_bootstrap5 %}
+
 {% block content %}
     {% if form.errors %}
         {{ form.errors }}
     {% endif %}
 
+  <h2>Register</h2>
+
   <form method="post" action="{% url 'register' %}">
     {% csrf_token %}
-    <h2>Register</h2>
+    
+    {% bootstrap_form form alert_error_type="fields" %}
 
-      <table class="table">
-        <tr>
-          <td>{{ form.first_name.label_tag }}</td>
-          <td>{{ form.first_name }}</td>
-        </tr>
-        <tr>
-          <td>{{ form.last_name.label_tag }}</td>
-          <td>{{ form.last_name }}</td>
-        </tr>
-        <tr>
-          <td>{{ form.email.label_tag }}</td>
-          <td>{{ form.email }}</td>
-        </tr>
-        <tr>
-          <td>{{ form.password1.label_tag }}</td>
-          <td>{{ form.password1 }}</td>
-        </tr>
-        <tr>
-            <td>{{ form.password2.label_tag }}</td>
-            <td>{{ form.password2 }}</td>
-          </tr>
-      </table>
+    {% bootstrap_button size="lg" extra_classes="w-100 btn-primary" button_type="submit" content="register" %}
 
-      <input type="submit" value="register">
-    </form>
+  </form>
 {% endblock %}
