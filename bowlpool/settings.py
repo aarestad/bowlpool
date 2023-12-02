@@ -1,13 +1,10 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-&a($#pax78x)jl2vg60r&0g--s2p*2lvpg9!qy3s14f%lsvk)%"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+SECRET_KEY = os.environ.get("BOWLPOOL_SECRET_KEY")
+DEBUG = os.environ.get("BOWLPOOL_DEBUG", False)
 ALLOWED_HOSTS = ["bowlpool.peter-aarestad.com", "127.0.0.1", "localhost"]
 
 INSTALLED_APPS = [
@@ -102,10 +99,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "static_files"
-#STATICFILES_DIRS = [
-#    BASE_DIR / "static_files",
-#]
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static_files",
+]
+
+if Path("/home/peteraar/").exists():
+    STATICFILES_DIRS.append("/home/peteraar/bowlpool.peter-aarestad.com/static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
