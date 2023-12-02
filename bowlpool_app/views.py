@@ -23,15 +23,20 @@ def register_user(request):
 
 
 def year_index(request):
-    years = (
-        BowlMatchup.objects.order_by("bowl_year").values_list("bowl_year").distinct()
-    )
+    try:
+        years = (
+            BowlMatchup.objects.order_by("bowl_year")
+            .values_list("bowl_year")
+            .distinct()
+        )[0]
+    except IndexError:
+        years = []
 
     return render(
         request,
         "year_index.html",
         {
-            "years": years[0] if len(years) else [],
+            "years": years,
         },
     )
 
