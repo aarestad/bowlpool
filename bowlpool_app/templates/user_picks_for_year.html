@@ -65,6 +65,7 @@
                   {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
                 </option>
                 {% else %}
+                  <option>Blahhh</option>
                   {% for team in cfp_teams %}
                   <option value="{{ team.id }}"
                     {% if bowl_matchup_pick.winner.id == team.id %}
