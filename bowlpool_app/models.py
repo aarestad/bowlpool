@@ -92,6 +92,9 @@ class BowlMatchup(models.Model):
     home_team_final_score = models.IntegerField(null=True, blank=True)
 
     def bowl_favorite(self):
+        if not self.home_team or self.away_team:
+            return "?"
+
         if self.home_team_point_spread == 0:
             return "Pick 'em"
 
@@ -123,7 +126,16 @@ class BowlMatchup(models.Model):
 
     @property
     def display_name(self):
-        dn = f"{self.bowl_game.name}: {self.away_team} vs {self.home_team}"
+        try:
+            away_team = str(self.away_team)
+        except BowlMatchup.away_team.RelatedObjectDoesNotExist:
+            away_team = "?"
+
+        try:
+            home_team = str(self.home_team)
+        except BowlMatchup.home_team.RelatedObjectDoesNotExist:
+            home_team = "?"
+        dn = f"{self.bowl_game.name}: {away_team} vs {home_team}"
 
         if self.cfp_playoff_game:
             dn += " (CFP Semifinal)"
