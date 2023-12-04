@@ -49,6 +49,7 @@
             <td>
               <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
                 <option value=""></option>
+                {% if not bowl_matchup_pick.bowl_matchup.cfp_playoff_game %}
                 <option value="{{ bowl_matchup_pick.bowl_matchup.away_team.id }}"
                   {% if bowl_matchup_pick.winner.id == bowl_matchup_pick.bowl_matchup.away_team.id %}
                   selected="selected"
@@ -63,6 +64,17 @@
                 >
                   {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
                 </option>
+                {% else %}
+                  {% for team in cfp_teams %}
+                  <option value="{{ team.id }}"
+                    {% if bowl_matchup_pick.winner.id == team.id %}
+                    selected="selected"
+                    {% endif %}
+                  >
+                    {{ team.name }}
+                  </option>
+                  {% endfor %}
+                {% endif %}
               </select>
               by
               <input type="number" name="{{ bowl_matchup_pick.bowl_matchup.id }}-margin"

@@ -83,6 +83,7 @@ def view_my_picks_for_year(request, bowl_year):
         {
             "bowl_year": bowl_year,
             "picks_for_year": picks_for_year,
+            "cfp_teams": cfp_teams,
         },
     )
 
