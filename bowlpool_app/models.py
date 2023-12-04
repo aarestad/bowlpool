@@ -50,7 +50,7 @@ class Team(models.Model):
     abbreviation = models.CharField(max_length=4)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         ordering = ["name"]
@@ -60,13 +60,15 @@ class BowlGame(models.Model):
     name = models.CharField(max_length=128)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         ordering = ["name"]
 
 
 class BowlMatchup(models.Model):
+    # TODO: think about how to handle the CFP National Championship matchup without
+    # relying on its name
     bowl_game = models.ForeignKey(BowlGame, on_delete=models.CASCADE)
     bowl_year = models.IntegerField(
         db_index=True,
