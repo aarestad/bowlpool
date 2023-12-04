@@ -31,8 +31,20 @@
               {% endif %}
             </td>
             <td>{{ bowl_matchup_pick.bowl_matchup.start_time }}</td>
-            <td>{{ bowl_matchup_pick.bowl_matchup.away_team.name }}</td>
-            <td>{{ bowl_matchup_pick.bowl_matchup.home_team.name }}</td>
+            <td>
+              {% if bowl_matchup_pick.bowl_matchup.away_team %}
+                {{ bowl_matchup_pick.bowl_matchup.away_team.name }}
+              {% else %}
+                ?
+              {% endif %}
+            </td>
+            <td>
+              {% if bowl_matchup_pick.bowl_matchup.home_team %}
+                {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
+              {% else %}
+                ?
+              {% endif %}
+            </td>
             <td>{{ bowl_matchup_pick.bowl_matchup.bowl_favorite }}</td>
             <td>
               <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
