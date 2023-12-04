@@ -77,17 +77,28 @@ class BowlMatchup(models.Model):
     cfp_playoff_game = models.BooleanField(default=False)
     start_time = models.DateTimeField(help_text=_("Stored as UTC"))
     away_team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="away_team"
+        Team,
+        on_delete=models.CASCADE,
+        related_name="away_team",
+        blank=True,
+        null=True,
     )
     home_team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="home_team"
+        Team,
+        on_delete=models.CASCADE,
+        related_name="home_team",
+        blank=True,
+        null=True,
     )
     home_team_point_spread = models.IntegerField(
         help_text=_(
             "Home team's point spread - negative means the home team "
             "is favored, positive means the away team is favored"
-        )
+        ),
+        blank=True,
+        null=True,
     )
+    point_spread_extra_half = models.BooleanField(default=False)
     away_team_final_score = models.IntegerField(null=True, blank=True)
     home_team_final_score = models.IntegerField(null=True, blank=True)
 
@@ -95,13 +106,15 @@ class BowlMatchup(models.Model):
         if not self.home_team or not self.away_team:
             return "?"
 
-        if self.home_team_point_spread == 0:
+        if self.home_team_point_spread == 0 and not self.point_spread_extra_half:
             return "Pick 'em"
 
+        extra_point_five = ".5" if self.point_spread_extra_half else ""
+
         return (
-            f"{self.home_team} by {abs(self.home_team_point_spread)}"
+            f"{self.home_team} by {abs(self.home_team_point_spread)}{extra_point_five}"
             if self.home_team_point_spread < 0
-            else f"{self.away_team} by {self.home_team_point_spread}"
+            else f"{self.away_team} by {self.home_team_point_spread}{extra_point_five}"
         )
 
     def clean(self):
