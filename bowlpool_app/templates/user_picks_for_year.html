@@ -24,7 +24,12 @@
       {% timezone "America/Chicago" %}
         {% for bowl_matchup_pick in picks_for_year %}
           <tr>
-            <td>{{ bowl_matchup_pick.bowl_matchup.bowl_game.name }}</td>
+            <td>
+              {{ bowl_matchup_pick.bowl_matchup.bowl_game }}
+              {% if bowl_matchup_pick.bowl_matchup.cfp_playoff_game %}
+              (CFP Semifinal)
+              {% endif %}
+            </td>
             <td>{{ bowl_matchup_pick.bowl_matchup.start_time }}</td>
             <td>{{ bowl_matchup_pick.bowl_matchup.away_team.name }}</td>
             <td>{{ bowl_matchup_pick.bowl_matchup.home_team.name }}</td>
