@@ -11,6 +11,17 @@
             body {
                 background-color: #f5f5f5;
             }
+
+            /* Hide those stupid spinner buttons */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+              -webkit-appearance: none;
+              margin: 0;
+            }
+          
+            input[type=number] {
+              -moz-appearance: textfield;
+            }
         </style>
     </head>
 

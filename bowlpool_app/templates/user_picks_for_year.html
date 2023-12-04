@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load django_bootstrap5 %}
+
 {% block content %}
   <h2>Your Picks</h2>
 
@@ -30,7 +32,9 @@
               (CFP Semifinal)
               {% endif %}
             </td>
+
             <td>{{ bowl_matchup_pick.bowl_matchup.start_time }}</td>
+
             <td>
               {% if bowl_matchup_pick.bowl_matchup.away_team %}
                 {{ bowl_matchup_pick.bowl_matchup.away_team.name }}
@@ -38,6 +42,7 @@
                 ?
               {% endif %}
             </td>
+
             <td>
               {% if bowl_matchup_pick.bowl_matchup.home_team %}
                 {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
@@ -45,10 +50,13 @@
                 ?
               {% endif %}
             </td>
+
             <td>{{ bowl_matchup_pick.bowl_matchup.bowl_favorite }}</td>
+
             <td>
               <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
                 <option value=""></option>
+
                 {% if bowl_matchup_pick.bowl_matchup.bowl_game.name != "CFP National Championship" %}
                 <option value="{{ bowl_matchup_pick.bowl_matchup.away_team.id }}"
                   {% if bowl_matchup_pick.winner.id == bowl_matchup_pick.bowl_matchup.away_team.id %}
@@ -76,9 +84,10 @@
                   {% endfor %}
                 {% endif %}
               </select>
+
               by
               <input type="number" name="{{ bowl_matchup_pick.bowl_matchup.id }}-margin"
-              value="{{ bowl_matchup_pick.margin }}">
+              value="{{ bowl_matchup_pick.margin }}" size="4">
             </td>
           </tr>
         {% endfor %}
@@ -86,6 +95,6 @@
       </tbody>
     </table>
 
-    <input type="submit" value="Submit Picks">
+    {% bootstrap_button button_type="submit" content="Submit Picks" %}
   </form>
 {% endblock %}
