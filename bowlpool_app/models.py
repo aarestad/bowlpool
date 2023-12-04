@@ -139,15 +139,8 @@ class BowlMatchup(models.Model):
 
     @property
     def display_name(self):
-        try:
-            away_team = str(self.away_team)
-        except BowlMatchup.away_team.RelatedObjectDoesNotExist:
-            away_team = "?"
-
-        try:
-            home_team = str(self.home_team)
-        except BowlMatchup.home_team.RelatedObjectDoesNotExist:
-            home_team = "?"
+        away_team = str(self.away_team) if self.away_team else "?"
+        home_team = str(self.home_team) if self.home_team else "?"
 
         dn = f"{self.bowl_game.name}: {away_team} vs {home_team}"
 
