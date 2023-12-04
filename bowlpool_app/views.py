@@ -3,7 +3,6 @@ from typing import Dict, List
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -126,9 +125,9 @@ def submit_my_picks_for_year(request, bowl_year):
         if "-" not in form_key:
             continue
 
-        key, type = form_key.split("-")
+        key, matchup_type = form_key.split("-")
         pick_for_matchup = picks_for_matchups.get(key, {})
-        pick_for_matchup[type] = request.POST[form_key]
+        pick_for_matchup[matchup_type] = request.POST[form_key]
         picks_for_matchups[key] = pick_for_matchup
 
     for matchup_id, pick in picks_for_matchups.items():
@@ -144,6 +143,9 @@ def submit_my_picks_for_year(request, bowl_year):
         bowl_matchup = BowlMatchup(id=matchup_id)
         winner = Team(id=pick["winner"])
         margin = int(pick["margin"])
+
+        # TODO: add logic to prevent CFP champ from being set without semifinals picked _and_ the winner
+        # coming from the winners of the semis
 
         try:
             db_pick = BowlMatchupPick.objects.get(
