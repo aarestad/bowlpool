@@ -50,7 +50,6 @@
               <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
                 <option value=""></option>
                 {% if bowl_matchup_pick.bowl_matchup.bowl_game.name != "CFP National Championship" %}
-                <!-- hi i am in the if -->
                 <option value="{{ bowl_matchup_pick.bowl_matchup.away_team.id }}"
                   {% if bowl_matchup_pick.winner.id == bowl_matchup_pick.bowl_matchup.away_team.id %}
                   selected="selected"
@@ -66,8 +65,6 @@
                   {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
                 </option>
                 {% else %}
-                  <!-- hi i am in the else -->
-                  <option value="99999">Blahhh</option>
                   {% for team in cfp_teams %}
                   <option value="{{ team.id }}"
                     {% if bowl_matchup_pick.winner.id == team.id %}
