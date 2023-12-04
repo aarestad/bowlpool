@@ -1,10 +1,13 @@
 from typing import Dict, List
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from .models import BowlMatchupPick, BowlMatchup, Team
 from .forms import BowlPoolUserCreationForm
@@ -52,19 +55,27 @@ def year_index(request):
 
 @login_required
 def view_my_picks_for_year(request, bowl_year):
-    picks_for_year = BowlMatchupPick.objects.filter(
-        bowl_matchup__bowl_year=bowl_year, user=request.user
+    matchups_for_year = BowlMatchup.objects.filter(bowl_year=bowl_year)
+
+    picks_for_year = list(
+        BowlMatchupPick.objects.filter(
+            bowl_matchup__bowl_year=bowl_year, user=request.user
+        )
     )
 
-    if not picks_for_year:
-        picks_for_year = []
+    picked_matchups = [p.bowl_matchup for p in picks_for_year]
 
-        matchups_for_year = BowlMatchup.objects.filter(bowl_year=bowl_year)
+    cfp_matchups = BowlMatchup.objects.filter(
+        bowl_year=bowl_year, cfp_playoff_game=True
+    ).select_related("home_team", "away_team")
 
-        for bowl_matchup in matchups_for_year:
-            picks_for_year.append(
-                BowlMatchupPick(user=request.user, bowl_matchup=bowl_matchup)
-            )
+    cfp_teams = [t for m in cfp_matchups for t in [m.home_team, m.away_team]]
+
+    for m in matchups_for_year:
+        if m not in picked_matchups:
+            picks_for_year.append(BowlMatchupPick(user=request.user, bowl_matchup=m))
+
+    picks_for_year.sort(key=lambda m: m.bowl_matchup.start_time)
 
     return render(
         request,
@@ -120,6 +131,15 @@ def submit_my_picks_for_year(request, bowl_year):
         picks_for_matchups[key] = pick_for_matchup
 
     for matchup_id, pick in picks_for_matchups.items():
+        if not pick["winner"] or not pick["margin"]:
+            bowl_matchup = BowlMatchup.objects.get(id=matchup_id)
+
+            messages.error(
+                request, _(f"Matchup {bowl_matchup.display_name} not picked")
+            )
+
+            continue
+
         bowl_matchup = BowlMatchup(id=matchup_id)
         winner = Team(id=pick["winner"])
         margin = int(pick["margin"])
