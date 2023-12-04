@@ -70,7 +70,6 @@ def view_my_picks_for_year(request, bowl_year):
     ).select_related("home_team", "away_team")
 
     cfp_teams = [t for m in cfp_matchups for t in [m.home_team, m.away_team]]
-    print(cfp_teams)
 
     for m in matchups_for_year:
         if m not in picked_matchups:
