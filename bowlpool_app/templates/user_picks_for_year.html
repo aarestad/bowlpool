@@ -49,7 +49,7 @@
             <td>
               <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
                 <option value=""></option>
-                {% if bowl_matchup_pick.bowl_matchup.name != "CFP National Championship" %}
+                {% if bowl_matchup_pick.bowl_matchup.bowl_game.name != "CFP National Championship" %}
                 <!-- hi i am in the if -->
                 <option value="{{ bowl_matchup_pick.bowl_matchup.away_team.id }}"
                   {% if bowl_matchup_pick.winner.id == bowl_matchup_pick.bowl_matchup.away_team.id %}
