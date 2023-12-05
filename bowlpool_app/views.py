@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from .models import BowlMatchupPick, BowlMatchup, Team
@@ -119,8 +120,9 @@ def view_all_picks_for_year(request, bowl_year):
 @login_required
 def submit_my_picks_for_year(request, bowl_year):
     picks_for_matchups = {}
-    new_picks = []
+    now = timezone.now()
 
+    # TODO: create a custom form for picks
     for form_key in request.POST.keys():
         if "-" not in form_key:
             continue
@@ -130,29 +132,35 @@ def submit_my_picks_for_year(request, bowl_year):
         pick_for_matchup[matchup_type] = request.POST[form_key]
         picks_for_matchups[key] = pick_for_matchup
 
-    for matchup_id, pick in picks_for_matchups.items():
-        if not pick["winner"] or not pick["margin"]:
-            bowl_matchup = BowlMatchup.objects.get(id=matchup_id)
+    champ_matchup_id = None
+    champ_pick = None
 
+    for matchup_id, pick in picks_for_matchups.items():
+        bowl_matchup = BowlMatchup.objects.get(id=matchup_id)
+
+        if now >= bowl_matchup.start_time:
+            continue
+
+        if bowl_matchup.bowl_game.name == "CFP National Championship":
+            # we'll deal with this after everything else is persisted
+            champ_matchup_id = matchup_id
+            champ_pick = pick
+            continue
+
+        if not pick["winner"] or not pick["margin"]:
             messages.error(
                 request, _(f"Matchup {bowl_matchup.display_name} not picked")
             )
 
             continue
 
-        bowl_matchup = BowlMatchup(id=matchup_id)
         winner = Team(id=pick["winner"])
         margin = int(pick["margin"])
-
-        # TODO: add logic to prevent CFP champ from being set without semifinals picked _and_ the winner
-        # coming from the winners of the semis
 
         try:
             db_pick = BowlMatchupPick.objects.get(
                 user=request.user, bowl_matchup=bowl_matchup
             )
-
-            # TODO: if db_pick.bowl_matchup.start_time <= now, return an error
 
             db_pick.winner = winner
             db_pick.margin = margin
@@ -166,6 +174,46 @@ def submit_my_picks_for_year(request, bowl_year):
 
         db_pick.full_clean()
         db_pick.save()
-        new_picks.append(db_pick)
+
+    if not champ_pick["winner"] or not champ_pick["margin"]:
+        messages.error(request, _("CFP National Championship not picked"))
+    else:
+        playoff_picks = list(
+            BowlMatchupPick.objects.filter(
+                user=request.user, bowl_matchup__cfp_playoff_game=True
+            )
+        )
+
+        if len(playoff_picks) != 2:
+            messages.error(request, _("Pick the CFP semifinal games before the final!"))
+        else:
+            picked_winner = Team(id=int(champ_pick["winner"]))
+            margin = int(champ_pick["margin"])
+
+            if not any(picked_winner.id == pick.winner.id for pick in playoff_picks):
+                messages.error(
+                    request, _("Champ pick must be one of your semifinal winners")
+                )
+            else:
+                champ_matchup = BowlMatchup.objects.get(id=champ_matchup_id)
+
+                if now < champ_matchup.start_time:
+                    try:
+                        db_pick = BowlMatchupPick.objects.get(
+                            user=request.user, bowl_matchup=champ_matchup
+                        )
+
+                        db_pick.winner = winner
+                        db_pick.margin = margin
+                    except BowlMatchupPick.DoesNotExist:
+                        db_pick = BowlMatchupPick(
+                            user=request.user,
+                            bowl_matchup=champ_matchup,
+                            winner=winner,
+                            margin=margin,
+                        )
+
+                    db_pick.full_clean()
+                    db_pick.save()
 
     return HttpResponseRedirect(reverse("view_my_picks_for_year", args=(bowl_year,)))
