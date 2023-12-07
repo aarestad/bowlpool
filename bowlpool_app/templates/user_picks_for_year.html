@@ -35,7 +35,11 @@
 
             <td>{{ bowl_matchup_pick.bowl_matchup.start_time }}</td>
 
-            <td>
+            <td
+            {% if bowl_matchup_pick.bowl_matchup.bowl_game.name == "CFP National Championship" %}
+              name="semifinal-one-winner"
+            {% endif %}
+            >
               {% if bowl_matchup_pick.bowl_matchup.away_team %}
                 {{ bowl_matchup_pick.bowl_matchup.away_team.name }}
               {% else %}
@@ -43,7 +47,11 @@
               {% endif %}
             </td>
 
-            <td>
+            <td
+            {% if bowl_matchup_pick.bowl_matchup.bowl_game.name == "CFP National Championship" %}
+              name="semifinal-two-winner"
+            {% endif %}
+            >
               {% if bowl_matchup_pick.bowl_matchup.home_team %}
                 {{ bowl_matchup_pick.bowl_matchup.home_team.name }}
               {% else %}
@@ -54,7 +62,8 @@
             <td>{{ bowl_matchup_pick.bowl_matchup.bowl_favorite }}</td>
 
             <td>
-              <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner">
+              <select name="{{ bowl_matchup_pick.bowl_matchup.id }}-winner"
+              id="{{bowl_matchup_pick.bowl_matchup.bowl_game.name}}">
                 <option value=""></option>
 
                 {% if bowl_matchup_pick.bowl_matchup.bowl_game.name != "CFP National Championship" %}
@@ -97,4 +106,60 @@
 
     {% bootstrap_button button_type="submit" content="Submit Picks" %}
   </form>
+
+  <script type="text/javascript">
+    {% comment %}TODO make this more generic - this is hard-coded for 2023{% endcomment %}
+    const champSelector = document.getElementsByName("26-winner")[0];
+    const semifinalOneSelector = document.getElementsByName("24-winner")[0];
+    const semifinalTwoSelector = document.getElementsByName("25-winner")[0];
+
+    const originalChampOptions = [];
+
+    for (const o of champSelector.children) {
+      originalChampOptions.push(o.cloneNode(true));
+    }
+
+    semifinalChangeListener = () => {
+      const optionsToRemove = [];
+      const semiOneSelection = semifinalOneSelector.options[semifinalOneSelector.selectedIndex];
+      const semiTwoSelection = semifinalTwoSelector.options[semifinalTwoSelector.selectedIndex];
+      console.log("semiOneSelection", semiOneSelection.innerText);
+      console.log("semiTwoSelection", semiTwoSelection.innerText);
+
+      for (let i = 0; i < champSelector.children.length; i++) {
+        const option = champSelector.children[i];
+        
+        console.log("looking at ", option.innerText);
+
+        if (option.value !== '' && (
+          !option.selected || (option.value !== semiOneSelection.value && option.value !== semiTwoSelection.value))) {
+          console.log("removing", option.innerText);
+          optionsToRemove.push(i);
+        }
+      }
+
+      // remove in reverse order so we don't goof up the indices
+      optionsToRemove.sort((a, b) => b - a);
+
+      for (const i of optionsToRemove) {
+        console.log("removing id", i);
+        champSelector.remove(i);
+      }
+
+      
+
+      for (const o of originalChampOptions) {
+        if (o.value !== '' && o.value !== champSelector.selectedOptions[0].value && (o.value === semiOneSelection.value || o.value === semiTwoSelection.value)) {
+          console.log("adding", o.innerText);
+          champSelector.appendChild(o);
+        }
+      }
+    }
+
+    semifinalOneSelector.onchange = semifinalChangeListener;
+    semifinalTwoSelector.onchange = semifinalChangeListener;
+
+    // fire the listener once to set initial state correctly
+    semifinalChangeListener();
+  </script>
 {% endblock %}

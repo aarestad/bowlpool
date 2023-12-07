@@ -187,10 +187,11 @@ def submit_my_picks_for_year(request, bowl_year):
         if len(playoff_picks) != 2:
             messages.error(request, _("Pick the CFP semifinal games before the final!"))
         else:
-            picked_winner = Team(id=int(champ_pick["winner"]))
-            margin = int(champ_pick["margin"])
+            print(champ_pick["winner"])
+            champ_winner = Team(id=int(champ_pick["winner"]))
+            champ_margin = int(champ_pick["margin"])
 
-            if not any(picked_winner.id == pick.winner.id for pick in playoff_picks):
+            if not any(champ_winner.id == pick.winner.id for pick in playoff_picks):
                 messages.error(
                     request, _("Champ pick must be one of your semifinal winners")
                 )
@@ -203,14 +204,14 @@ def submit_my_picks_for_year(request, bowl_year):
                             user=request.user, bowl_matchup=champ_matchup
                         )
 
-                        db_pick.winner = winner
-                        db_pick.margin = margin
+                        db_pick.winner = champ_winner
+                        db_pick.margin = champ_margin
                     except BowlMatchupPick.DoesNotExist:
                         db_pick = BowlMatchupPick(
                             user=request.user,
                             bowl_matchup=champ_matchup,
-                            winner=winner,
-                            margin=margin,
+                            winner=champ_winner,
+                            margin=champ_margin,
                         )
 
                     db_pick.full_clean()
