@@ -9,6 +9,8 @@
 
 {% load tz %}
 
+{% if picks_for_year %}
+
 {% for bowl_matchup, picks in picks_for_year.items %}
 <h3>{{ bowl_matchup.display_name }}</h3>
 
@@ -18,5 +20,9 @@
     {% endfor %}
 </ul>
 {% endfor %}
+
+{% else %}
+{{ message }}
+{% endif %}
 
 {% endblock %}

@@ -113,5 +113,5 @@ if Path("/home/peteraar/").exists():
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SITE_ID = 2
-LOGIN_REDIRECT_URL = "/bowl-pool/"
+LOGIN_REDIRECT_URL = "/bowl-pool/2023/my-picks"
 LOGOUT_REDIRECT_URL = "/bowl-pool/"

@@ -1,4 +1,6 @@
 from typing import Dict, List
+import zoneinfo
+import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -27,7 +29,9 @@ def register_user(request):
 
             login(request, new_user)
 
-            return HttpResponseRedirect(reverse("year_index"))
+            return HttpResponseRedirect(
+                reverse("view_my_picks_for_year", kwargs={"bowl_year": 2023})
+            )
     else:
         form = BowlPoolUserCreationForm()
 
@@ -89,6 +93,15 @@ def view_my_picks_for_year(request, bowl_year):
 
 
 def view_all_picks_for_year(request, bowl_year):
+    now = timezone.now()
+
+    if now < datetime.datetime(2023, 12, 26, 0, tzinfo=zoneinfo.ZoneInfo("UTC")):
+        return render(
+            request,
+            "all_picks_for_year.html",
+            {"bowl_year": bowl_year, "message": "No peeking until December 26!"},
+        )
+
     all_picks_for_year = BowlMatchupPick.objects.filter(
         bowl_matchup__bowl_year=bowl_year,
     )
