@@ -1,6 +1,7 @@
 from typing import Dict, List
 import zoneinfo
 import datetime
+from itertools import groupby
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -107,19 +108,10 @@ def view_all_picks_for_year(request, bowl_year):
         bowl_matchup__bowl_year=bowl_year,
     )
 
-    picks_by_bowl_game: Dict[BowlMatchup, List[BowlMatchupPick]] = {}
+    picks_by_bowl_game = {}
 
-    # TODO there's a collections function that does this in the Python stdlib
-    for pick in all_picks_for_year:
-        if pick.bowl_matchup not in picks_by_bowl_game:
-            picks_by_bowl_game[pick.bowl_matchup] = [pick]
-        else:
-            picks_by_bowl_game[pick.bowl_matchup].append(pick)
-
-    for pick_list in picks_by_bowl_game.values():
-        pick_list.sort(
-            key=lambda p: p.user.last_name.lower() + p.user.first_name.lower()
-        )
+    for k, g in groupby(all_picks_for_year, key=lambda p: p.bowl_matchup):
+        picks_by_bowl_game[k] = list(g)
 
     return render(
         request,
@@ -145,18 +137,15 @@ def json_picks_for_year(request, bowl_year):
         "margin",
     )
 
-    picks_by_bowl_game: Dict[BowlMatchup, List[BowlMatchupPick]] = {}
-
-    # TODO there's a collections function that does this in the Python stdlib
-    for pick in all_picks_for_year:
-        if pick["bowl_matchup__bowl_game__name"] not in picks_by_bowl_game:
-            picks_by_bowl_game[pick["bowl_matchup__bowl_game__name"]] = [pick]
-        else:
-            picks_by_bowl_game[pick["bowl_matchup__bowl_game__name"]].append(pick)
+    picks_by_bowl_game: Dict[BowlMatchup, List[BowlMatchupPick]] = groupby(
+        all_picks_for_year, key=lambda p: p["bowl_matchup__bowl_game__name"]
+    )
 
     picks_list = []
 
-    for matchup, picks in picks_by_bowl_game.items():
+    for matchup, picks in picks_by_bowl_game:
+        picks = list(picks)
+
         picks_list.append(
             {
                 "matchup": {
