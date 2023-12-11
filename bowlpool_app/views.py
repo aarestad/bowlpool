@@ -5,7 +5,8 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.forms.models import model_to_dict
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -128,6 +129,54 @@ def view_all_picks_for_year(request, bowl_year):
             "picks_for_year": picks_by_bowl_game,
         },
     )
+
+
+def json_picks_for_year(request, bowl_year):
+    all_picks_for_year = BowlMatchupPick.objects.filter(
+        bowl_matchup__bowl_year=bowl_year,
+    ).values(
+        "bowl_matchup__bowl_game__name",
+        "bowl_matchup__start_time",
+        "bowl_matchup__away_team__name",
+        "bowl_matchup__home_team__name",
+        "user__first_name",
+        "user__last_name",
+        "winner__name",
+        "margin",
+    )
+
+    picks_by_bowl_game: Dict[BowlMatchup, List[BowlMatchupPick]] = {}
+
+    # TODO there's a collections function that does this in the Python stdlib
+    for pick in all_picks_for_year:
+        if pick["bowl_matchup__bowl_game__name"] not in picks_by_bowl_game:
+            picks_by_bowl_game[pick["bowl_matchup__bowl_game__name"]] = [pick]
+        else:
+            picks_by_bowl_game[pick["bowl_matchup__bowl_game__name"]].append(pick)
+
+    picks_list = []
+
+    for matchup, picks in picks_by_bowl_game.items():
+        picks_list.append(
+            {
+                "matchup": {
+                    "bowl_game": matchup,
+                    "start_time": picks[0]["bowl_matchup__start_time"],
+                    "home_team": picks[0]["bowl_matchup__home_team__name"],
+                    "away_team": picks[0]["bowl_matchup__away_team__name"],
+                },
+                "picks": [
+                    {
+                        "name": " ".join((p["user__first_name"], p["user__last_name"])),
+                        "winner": p["winner__name"],
+                        "margin": p["margin"],
+                    }
+                    for p in picks
+                ],
+            }
+        )
+
+    return JsonResponse(picks_list, safe=False)
 
 
 @login_required

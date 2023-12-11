@@ -13,6 +13,11 @@ urlpatterns = [
         name="view_all_picks_for_year",
     ),
     path(
+        "<int:bowl_year>/json",
+        views.json_picks_for_year,
+        name="json_picks_for_year",
+    ),
+    path(
         "<int:bowl_year>/my-picks",
         views.view_my_picks_for_year,
         name="view_my_picks_for_year",
