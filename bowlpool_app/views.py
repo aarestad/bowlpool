@@ -129,6 +129,7 @@ def json_picks_for_year(request, bowl_year):
     ).values(
         "bowl_matchup__bowl_game__name",
         "bowl_matchup__start_time",
+        "bowl_matchup__cfp_playoff_game",
         "bowl_matchup__away_team__name",
         "bowl_matchup__home_team__name",
         "user__first_name",
@@ -153,6 +154,7 @@ def json_picks_for_year(request, bowl_year):
                     "start_time": picks[0]["bowl_matchup__start_time"],
                     "home_team": picks[0]["bowl_matchup__home_team__name"],
                     "away_team": picks[0]["bowl_matchup__away_team__name"],
+                    "cfp_playoff_game": picks[0]["bowl_matchup__cfp_playoff_game"],
                 },
                 "picks": [
                     {
