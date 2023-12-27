@@ -202,7 +202,11 @@ def json_picks_for_year(request, bowl_year):
             ],
         }
 
-        pick_object["winners"] = calculate_winners(pick_object)
+        if (
+            pick_object["matchup"]["away_team_score"] is not None
+            and pick_object["matchup"]["home_team_score"] is not None
+        ):
+            pick_object["winners"] = calculate_winners(pick_object)
 
         picks_list.append(pick_object)
 
