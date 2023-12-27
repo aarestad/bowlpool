@@ -198,8 +198,9 @@ def json_picks_for_year(request, bowl_year):
                 }
                 for p in picks
             ],
-            "winners": calculate_winners(pick_object),
         }
+
+        pick_object["winners"] = calculate_winners(pick_object)
 
         picks_list.append(pick_object)
 
