@@ -147,14 +147,16 @@ def json_picks_for_year(request, bowl_year):
     picks_list = []
 
     def calculate_winners(picks):
-        margin = picks.matchup.away_team_score - picks.matchup.home_team_score
+        margin = (
+            picks["matchup"]["away_team_score"] - picks["matchup"]["home_team_score"]
+        )
 
         closest_distance = 999
 
         for pick in picks.picks:
-            picked_margin = pick.margin
+            picked_margin = pick["margin"]
 
-            if pick.winner == picks.matchup.home_team:
+            if pick["winner"] == picks["matchup"]["home_team"]:
                 picked_margin = -picked_margin
 
             distance = abs(picked_margin - margin)
@@ -164,16 +166,16 @@ def json_picks_for_year(request, bowl_year):
 
         winners = []
 
-        for pick in picks.picks:
-            picked_margin = pick.margin
+        for pick in picks["picks"]:
+            picked_margin = pick["margin"]
 
-            if pick.winner == picks.matchup.home_team:
+            if pick["winner"] == picks["matchup"]["home_team"]:
                 picked_margin = -picked_margin
 
             distance = abs(picked_margin - margin)
 
             if distance == closest_distance:
-                winners.append(pick.name)
+                winners.append(pick["name"])
 
         return winners
 
