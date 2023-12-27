@@ -146,30 +146,62 @@ def json_picks_for_year(request, bowl_year):
 
     picks_list = []
 
+    def calculate_winners(picks):
+        margin = picks.matchup.away_team_score - picks.matchup.home_team_score
+
+        closest_distance = 999
+
+        for pick in picks.picks:
+            picked_margin = pick.margin
+
+            if pick.winner == picks.matchup.home_team:
+                picked_margin = -picked_margin
+
+            distance = abs(picked_margin - margin)
+
+            if distance < closest_distance:
+                closest_distance = distance
+
+        winners = []
+
+        for pick in picks.picks:
+            picked_margin = pick.margin
+
+            if pick.winner == picks.matchup.home_team:
+                picked_margin = -picked_margin
+
+            distance = abs(picked_margin - margin)
+
+            if distance == closest_distance:
+                winners.append(pick.name)
+
+        return winners
+
     for matchup, picks in picks_by_bowl_game:
         picks = list(picks)
 
-        picks_list.append(
-            {
-                "matchup": {
-                    "bowl_game": matchup,
-                    "start_time": picks[0]["bowl_matchup__start_time"],
-                    "home_team": picks[0]["bowl_matchup__home_team__name"],
-                    "away_team": picks[0]["bowl_matchup__away_team__name"],
-                    "cfp_playoff_game": picks[0]["bowl_matchup__cfp_playoff_game"],
-                    "away_team_score": picks[0]["bowl_matchup__away_team_final_score"],
-                    "home_team_score": picks[0]["bowl_matchup__home_team_final_score"],
-                },
-                "picks": [
-                    {
-                        "name": " ".join((p["user__first_name"], p["user__last_name"])),
-                        "winner": p["winner__name"],
-                        "margin": p["margin"],
-                    }
-                    for p in picks
-                ],
-            }
-        )
+        pick_object = {
+            "matchup": {
+                "bowl_game": matchup,
+                "start_time": picks[0]["bowl_matchup__start_time"],
+                "home_team": picks[0]["bowl_matchup__home_team__name"],
+                "away_team": picks[0]["bowl_matchup__away_team__name"],
+                "cfp_playoff_game": picks[0]["bowl_matchup__cfp_playoff_game"],
+                "away_team_score": picks[0]["bowl_matchup__away_team_final_score"],
+                "home_team_score": picks[0]["bowl_matchup__home_team_final_score"],
+            },
+            "picks": [
+                {
+                    "name": " ".join((p["user__first_name"], p["user__last_name"])),
+                    "winner": p["winner__name"],
+                    "margin": p["margin"],
+                }
+                for p in picks
+            ],
+            "winners": calculate_winners(pick_object),
+        }
+
+        picks_list.append(pick_object)
 
     return JsonResponse(picks_list, safe=False)
 
