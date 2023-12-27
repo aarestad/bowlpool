@@ -134,7 +134,7 @@ class BowlMatchup(models.Model):
         :return: The final margin, or None if the score is not set
         """
 
-        if self.away_team_final_score is not None and self.home_team_final_score:
+        if self.away_team_final_score is not None and self.home_team_final_score is not None:
             return self.away_team_final_score - self.home_team_final_score
 
         return None
