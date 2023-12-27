@@ -208,6 +208,8 @@ def json_picks_for_year(request, bowl_year):
         ):
             pick_object["winners"] = calculate_winners(pick_object)
 
+        pick_object["picks"].sort(lambda p: p["name"])
+
         picks_list.append(pick_object)
 
     return JsonResponse(picks_list, safe=False)
