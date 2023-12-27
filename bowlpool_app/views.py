@@ -153,7 +153,7 @@ def json_picks_for_year(request, bowl_year):
 
         closest_distance = 999
 
-        for pick in picks.picks:
+        for pick in picks["picks"]:
             picked_margin = pick["margin"]
 
             if pick["winner"] == picks["matchup"]["home_team"]:
