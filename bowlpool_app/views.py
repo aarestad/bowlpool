@@ -170,7 +170,7 @@ def json_picks_for_year(request, bowl_year):
 
         return [
             name
-            for name, distance in name_distances.values()
+            for name, distance in name_distances.items()
             if distance == closest_distance
         ]
 
