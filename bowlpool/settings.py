@@ -5,7 +5,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("BOWLPOOL_SECRET_KEY")
 DEBUG = os.environ.get("BOWLPOOL_DEBUG", False)
-ALLOWED_HOSTS = ["bowlpool.peter-aarestad.com", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    "bowlpool.peter-aarestad.com",
+    "bowlpool.fly.dev",
+    "127.0.0.1",
+    "localhost",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
