@@ -6,10 +6,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("BOWLPOOL_SECRET_KEY")
 DEBUG = os.environ.get("BOWLPOOL_DEBUG", False)
 ALLOWED_HOSTS = [
-    "bowlpool.peter-aarestad.com",
     "bowlpool.fly.dev",
     "127.0.0.1",
     "localhost",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://bowlpool.fly.dev",
+]
+CORS_ORIGIN_WHITELIST = [
+    "https://bowlpool.fly.dev",
 ]
 
 INSTALLED_APPS = [
@@ -64,7 +69,7 @@ WSGI_APPLICATION = "bowlpool.wsgi.application"
 # SECURE_HSTS_PRELOAD = True
 # SECURE_SSL_REDIRECT = True
 # SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 # Database
