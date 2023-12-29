@@ -151,11 +151,17 @@ def json_picks_for_year(request, bowl_year):
             picks["matchup"]["away_team_score"] - picks["matchup"]["home_team_score"]
         )
 
+        winning_team = (
+            picks["matchup"]["away_team"]
+            if margin > 0
+            else picks["matchup"]["home_team"]
+        )
+
         closest_distance = 999
 
         name_distances = {}
 
-        for pick in picks["picks"]:
+        for pick in filter(picks["picks"], lambda p: pick["winner"] == winning_team):
             picked_margin = pick["margin"]
 
             if pick["winner"] == picks["matchup"]["home_team"]:
