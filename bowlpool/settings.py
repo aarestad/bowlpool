@@ -77,8 +77,12 @@ CSRF_COOKIE_SECURE = True
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.environ.get("BOWLPOOL_DB_PATH", BASE_DIR / "db.sqlite3"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "bowlpool-db",
+        "USER": "postgres",
+        "PASSWORD": os.environ.get("BOWLPOOL_DB_PASSWORD"),
+        "HOST": "bowlpool-db.internal",
+        "PORT": "5432",
     }
 }
 
