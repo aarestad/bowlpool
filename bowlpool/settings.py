@@ -77,7 +77,7 @@ CSRF_COOKIE_SECURE = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_rul.config(
+    "default": dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
     )
