@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -76,14 +77,10 @@ CSRF_COOKIE_SECURE = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "bowlpool-db",
-        "USER": "postgres",
-        "PASSWORD": os.environ.get("BOWLPOOL_DB_PASSWORD"),
-        "HOST": "bowlpool-db.internal",
-        "PORT": "5432",
-    }
+    "default": dj_database_rul.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
